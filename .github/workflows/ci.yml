@@ -1,0 +1,84 @@
+name: CI
+
+# Runs on every pull request and on pushes to main. These are read-only checks:
+# no AWS credentials are requested here.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: Terraform fmt / validate / lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+
+      - name: Format check
+        run: terraform fmt -check -recursive
+
+      - name: Validate root configuration
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      - name: Validate bootstrap configuration
+        run: |
+          cd bootstrap
+          terraform init -backend=false
+          terraform validate
+
+      - name: tflint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+      - run: tflint --recursive
+
+  unit-tests:
+    name: Lambda unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install test dependencies
+        run: pip install -r tests/requirements.txt
+      - name: Run tests
+        run: pytest -q
+
+  iac-security:
+    name: IaC security scan (Trivy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy config scan
+        uses: aquasecurity/trivy-action@0.36.0
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+          trivy-config: trivy.yaml
+          trivyignores: .trivyignore
+
+  dependency-scan:
+    name: Lambda dependency & secret scan (Trivy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret
+          severity: CRITICAL,HIGH
+          exit-code: "1"

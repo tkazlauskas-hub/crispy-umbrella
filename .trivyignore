@@ -1,0 +1,11 @@
+# Accepted, reviewed Trivy misconfiguration findings.
+# Rationale for each is documented in docs/security-scanning.md.
+# The pipeline gates on CRITICAL+HIGH; these IDs are explicit, owned exceptions.
+#
+# NOTE: Trivy check IDs (AVD-AWS-####) can vary by Trivy version. On the first
+# pipeline run, confirm the IDs reported and add any additional accepted ones
+# here with a one-line justification.
+
+# IAM policy with wildcard resource — only the AWS-mandated cases remain
+# (EC2 ENI management for VPC Lambdas; KMS key-policy root baseline).
+AVD-AWS-0057
