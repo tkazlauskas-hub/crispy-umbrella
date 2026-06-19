@@ -1,0 +1,26 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+# Keep .terraform.lock.hcl committed for reproducible provider versions.
+
+# Lambda build artifacts
+modules/lambda/build/
+dist/
+*.zip
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
