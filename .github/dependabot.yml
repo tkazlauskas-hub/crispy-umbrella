@@ -1,0 +1,23 @@
+version: 2
+updates:
+  # Keep GitHub Actions pinned versions current (supply-chain hygiene).
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  # Terraform providers/modules.
+  - package-ecosystem: terraform
+    directory: "/"
+    schedule:
+      interval: weekly
+  - package-ecosystem: terraform
+    directory: "/bootstrap"
+    schedule:
+      interval: weekly
+
+  # Python test tooling.
+  - package-ecosystem: pip
+    directory: "/tests"
+    schedule:
+      interval: weekly

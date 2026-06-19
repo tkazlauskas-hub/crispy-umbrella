@@ -1,0 +1,9 @@
+# Trivy configuration shared by CI and the deploy pipeline.
+misconfiguration:
+  # Terraform-specific scanning.
+  terraform:
+    exclude-downloaded-modules: true
+scan:
+  skip-dirs:
+    - "**/.terraform"
+    - "**/build"
