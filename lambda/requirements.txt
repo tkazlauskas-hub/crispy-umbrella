@@ -1,0 +1,4 @@
+# Runtime dependencies for the Lambda package.
+# Intentionally empty: the handler uses only the standard library and boto3,
+# and boto3 is provided by the AWS Lambda python3.13 runtime. No third-party
+# dependencies keeps the package small and the supply chain minimal.
