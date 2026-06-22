@@ -175,8 +175,7 @@ terraform fmt -recursive
 
 - **Provider lock file:** run `terraform init` once and commit the generated
   `.terraform.lock.hcl` (kept out of `.gitignore` on purpose) to pin exact
-  provider hashes. It is not committed here because the environment that built
-  the repo had no network access to the provider registry.
+  provider hashes.
 - **First apply:** `bootstrap/` must be applied once before the pipeline runs.
   The `aws_api_gateway_account` CloudWatch role it creates is an account/region
   singleton; on a shared account, reconcile it with any existing setting.
