@@ -362,6 +362,19 @@ data "aws_iam_policy_document" "deploy" {
     }
   }
 
+  # DynamoDB SSE with a CMK requires the creating principal to manage a grant on
+  # the key. Scoped to keys tagged for this project.
+  statement {
+    sid       = "KmsProjectKeyGrants"
+    actions   = ["kms:CreateGrant", "kms:ListGrants", "kms:RevokeGrant"]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:ResourceTag/Project"
+      values   = ["homework-health-check"]
+    }
+  }
+
   # --- CloudWatch Logs ----------------------------------------------------
   statement {
     sid = "LogsManagement"

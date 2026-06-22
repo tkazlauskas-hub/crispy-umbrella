@@ -78,3 +78,6 @@ On every `terraform plan` the CI deploy role must *read* each managed resource. 
 - `wafv2:GetLoggingConfiguration` / `PutLoggingConfiguration` / `DeleteLoggingConfiguration` - WAF logging lifecycle, bounded to the region.
 
 Lambda attribute reads (`lambda:Get*` / `lambda:List*`) are scoped to the project function ARNs (`*-health-check-*`), not account-wide. These are the minimal additions that let the pipeline run `plan`/`apply` under the scoped role instead of an administrator; all mutating power stays bounded by region and by the permissions boundary.
+
+### Deploy-role create-time grants
+Creating a DynamoDB table with a customer-managed key requires the deploy role to manage a KMS grant on that key (`kms:CreateGrant`, plus `ListGrants` / `RevokeGrant` for lifecycle), scoped to keys tagged for this project. WAF logging delivered to CloudWatch Logs additionally needs account-level `logs:*LogDelivery*` actions; that broader set is intentionally **not** granted here - WAF logging is provisioned once as a managed prerequisite rather than something the least-privilege pipeline role re-creates from scratch.
