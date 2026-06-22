@@ -267,6 +267,14 @@ data "aws_iam_policy_document" "deploy" {
     resources = local.env_lambda_arns
   }
 
+  # Lambda read actions Terraform performs on every plan refresh of the function
+  # (code-signing config, runtime mgmt, concurrency, policy, versions). Scoped to project function ARNs.
+  statement {
+    sid       = "LambdaReads"
+    actions   = ["lambda:Get*", "lambda:List*"]
+    resources = local.env_lambda_arns
+  }
+
   # --- API Gateway --------------------------------------------------------
   # API Gateway IAM uses control-plane ARNs under /restapis, /apikeys, etc.
   statement {
