@@ -462,6 +462,14 @@ data "aws_iam_policy_document" "deploy" {
     }
   }
 
+  # WAF logging to CloudWatch Logs uses account-level CloudWatch Logs log-delivery
+  # APIs that do not support resource-level scoping (mandatory *).
+  statement {
+    sid       = "WafLogDelivery"
+    actions   = ["logs:CreateLogDelivery", "logs:GetLogDelivery", "logs:UpdateLogDelivery", "logs:DeleteLogDelivery", "logs:ListLogDeliveries"]
+    resources = ["*"]
+  }
+
   # Read-only identity lookups Terraform performs during plan.
   statement {
     sid       = "ReadOnlyContext"
