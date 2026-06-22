@@ -1,15 +1,15 @@
 data "aws_caller_identity" "current" {}
 
 module "network" {
-  source               = "./modules/network"
-  name_prefix          = local.name_prefix
-  vpc_cidr             = var.vpc_cidr
-  private_subnet_cidrs = var.private_subnet_cidrs
-  availability_zones        = var.availability_zones
-  aws_region                = var.aws_region
-  log_kms_key_arn           = module.kms.key_arn
-  permissions_boundary_arn  = var.permissions_boundary_arn
-  tags                      = local.common_tags
+  source                   = "./modules/network"
+  name_prefix              = local.name_prefix
+  vpc_cidr                 = var.vpc_cidr
+  private_subnet_cidrs     = var.private_subnet_cidrs
+  availability_zones       = var.availability_zones
+  aws_region               = var.aws_region
+  log_kms_key_arn          = module.kms.key_arn
+  permissions_boundary_arn = var.permissions_boundary_arn
+  tags                     = local.common_tags
 }
 
 module "kms" {
@@ -29,22 +29,22 @@ module "dynamodb" {
 }
 
 module "lambda" {
-  source               = "./modules/lambda"
-  function_name        = local.function_name
-  source_dir           = "${path.module}/lambda"
-  runtime              = var.lambda_runtime
-  handler              = "app.handler"
-  table_name           = module.dynamodb.table_name
-  table_arn            = module.dynamodb.table_arn
-  kms_key_arn          = module.kms.key_arn
-  log_kms_key_arn      = module.kms.key_arn
-  subnet_ids           = module.network.private_subnet_ids
-  security_group_id    = module.network.lambda_security_group_id
-  aws_region           = var.aws_region
-  log_retention_days   = var.log_retention_days
-  reserved_concurrency = var.reserved_concurrency
-  memory_size          = var.lambda_memory
-  timeout              = var.lambda_timeout
+  source                   = "./modules/lambda"
+  function_name            = local.function_name
+  source_dir               = "${path.module}/lambda"
+  runtime                  = var.lambda_runtime
+  handler                  = "app.handler"
+  table_name               = module.dynamodb.table_name
+  table_arn                = module.dynamodb.table_arn
+  kms_key_arn              = module.kms.key_arn
+  log_kms_key_arn          = module.kms.key_arn
+  subnet_ids               = module.network.private_subnet_ids
+  security_group_id        = module.network.lambda_security_group_id
+  aws_region               = var.aws_region
+  log_retention_days       = var.log_retention_days
+  reserved_concurrency     = var.reserved_concurrency
+  memory_size              = var.lambda_memory
+  timeout                  = var.lambda_timeout
   log_level                = var.log_level
   permissions_boundary_arn = var.permissions_boundary_arn
   tags                     = local.common_tags

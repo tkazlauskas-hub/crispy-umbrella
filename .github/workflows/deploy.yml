@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Trivy IaC scan
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: config
           scan-ref: .
@@ -36,7 +36,7 @@ jobs:
           trivy-config: trivy.yaml
           trivyignores: .trivyignore
       - name: Trivy dependency & secret scan
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
@@ -60,7 +60,7 @@ jobs:
           mkdir -p dist
           (cd lambda && zip -r -X "../dist/health-check-${GITHUB_SHA}.zip" . -x '*.pyc' '__pycache__/*')
       - name: Generate SBOM (CycloneDX)
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: lambda

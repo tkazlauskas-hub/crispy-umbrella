@@ -57,8 +57,8 @@ variable "aws_region" {
 }
 
 variable "log_retention_days" {
-  type        = number
-  default     = 30
+  type    = number
+  default = 30
 }
 
 variable "reserved_concurrency" {
