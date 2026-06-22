@@ -279,7 +279,7 @@ data "aws_iam_policy_document" "deploy" {
   # API Gateway IAM uses control-plane ARNs under /restapis, /apikeys, etc.
   statement {
     sid     = "ApiGatewayManagement"
-    actions = ["apigateway:GET", "apigateway:POST", "apigateway:PUT", "apigateway:DELETE", "apigateway:PATCH"]
+    actions = ["apigateway:GET", "apigateway:POST", "apigateway:PUT", "apigateway:DELETE", "apigateway:PATCH", "apigateway:SetWebACL"]
     resources = [
       "arn:aws:apigateway:${local.region}::/restapis",
       "arn:aws:apigateway:${local.region}::/restapis/*",
