@@ -428,6 +428,19 @@ data "aws_iam_policy_document" "deploy" {
     }
   }
 
+  # Extra read + WAF-logging actions needed for terraform plan refresh and the
+  # WAF logging lifecycle. Account/region-level APIs, bounded to the region.
+  statement {
+    sid       = "ExtraPlanReads"
+    actions   = ["ec2:DescribeVpcAttribute", "wafv2:GetLoggingConfiguration", "wafv2:PutLoggingConfiguration", "wafv2:DeleteLoggingConfiguration"]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:RequestedRegion"
+      values   = [local.region]
+    }
+  }
+
   # Read-only identity lookups Terraform performs during plan.
   statement {
     sid       = "ReadOnlyContext"
