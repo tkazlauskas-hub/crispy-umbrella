@@ -375,6 +375,19 @@ data "aws_iam_policy_document" "deploy" {
     }
   }
 
+  # DynamoDB operations on a CMK-encrypted table (e.g. enabling TTL) require the
+  # caller to use the key. Data-plane KMS, scoped to keys tagged for this project.
+  statement {
+    sid       = "KmsProjectKeyData"
+    actions   = ["kms:Encrypt", "kms:Decrypt", "kms:GenerateDataKey", "kms:GenerateDataKeyWithoutPlaintext", "kms:ReEncryptFrom", "kms:ReEncryptTo"]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:ResourceTag/Project"
+      values   = ["homework-health-check"]
+    }
+  }
+
   # --- CloudWatch Logs ----------------------------------------------------
   statement {
     sid = "LogsManagement"
