@@ -152,3 +152,15 @@ resource "aws_flow_log" "this" {
 
   tags = merge(var.tags, { Name = "${var.name_prefix}-vpc-flow-log" })
 }
+
+# Lambda reaches DynamoDB via its GATEWAY endpoint, whose traffic targets the AWS
+# service prefix list (not the VPC CIDR). The VPC-CIDR egress rule only covers the
+# interface endpoints, so add explicit egress to the DynamoDB prefix list.
+resource "aws_vpc_security_group_egress_rule" "lambda_dynamodb" {
+  security_group_id = aws_security_group.lambda.id
+  description       = "HTTPS to DynamoDB via gateway endpoint prefix list"
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+  prefix_list_id    = aws_vpc_endpoint.dynamodb.prefix_list_id
+}
