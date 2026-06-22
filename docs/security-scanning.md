@@ -69,3 +69,12 @@ covers Log4j (`Log4JRCE`).
 ### Permissions boundaries
 All workload roles carry an IAM permissions boundary, and the deploy role may
 only create roles that include it — a hard ceiling against privilege escalation.
+
+### Deploy-role read permissions (terraform plan refresh)
+On every `terraform plan` the CI deploy role must *read* each managed resource. A few of these reads are account- or region-level APIs that do not support resource-level scoping, so they use `Resource = "*"` (bounded to the deployment region where the API allows it):
+
+- `logs:DescribeResourcePolicies` / `PutResourcePolicy` / `DeleteResourcePolicy` - the WAF log destination is an account-level CloudWatch Logs resource policy.
+- `ec2:DescribeVpcAttribute` - reading `enableDnsHostnames` is not resource-scopable.
+- `wafv2:GetLoggingConfiguration` / `PutLoggingConfiguration` / `DeleteLoggingConfiguration` - WAF logging lifecycle, bounded to the region.
+
+Lambda attribute reads (`lambda:Get*` / `lambda:List*`) are scoped to the project function ARNs (`*-health-check-*`), not account-wide. These are the minimal additions that let the pipeline run `plan`/`apply` under the scoped role instead of an administrator; all mutating power stays bounded by region and by the permissions boundary.
