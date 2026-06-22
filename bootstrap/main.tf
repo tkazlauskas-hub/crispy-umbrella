@@ -372,6 +372,13 @@ data "aws_iam_policy_document" "deploy" {
     resources = ["*"]
   }
 
+  # CloudWatch Logs resource policies are account-level (mandatory *), for the WAF log destination.
+  statement {
+    sid       = "LogsResourcePolicies"
+    actions   = ["logs:DescribeResourcePolicies", "logs:PutResourcePolicy", "logs:DeleteResourcePolicy"]
+    resources = ["*"]
+  }
+
   # --- VPC / networking ---------------------------------------------------
   # The EC2 networking actions below largely do not support resource-level
   # permissions (this is an AWS API limitation, not a scoping oversight). They
