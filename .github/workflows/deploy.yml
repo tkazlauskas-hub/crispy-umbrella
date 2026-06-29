@@ -67,7 +67,7 @@ jobs:
           format: cyclonedx
           output: dist/health-check-sbom.cdx.json
       - name: Attest build provenance
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: dist/health-check-${{ github.sha }}.zip
       - name: Upload artifact + SBOM
