@@ -25,7 +25,7 @@ jobs:
     name: Security scan (pre-deploy)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Trivy IaC scan
         uses: aquasecurity/trivy-action@v0.36.0
         with:
@@ -54,7 +54,7 @@ jobs:
       contents: read
       attestations: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build deterministic zip
         run: |
           mkdir -p dist
@@ -84,7 +84,7 @@ jobs:
     needs: [security, package]
     environment: staging
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -115,7 +115,7 @@ jobs:
     needs: deploy-staging
     environment: prod # set Required reviewers on this environment in GitHub
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:

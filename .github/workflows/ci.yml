@@ -15,7 +15,7 @@ jobs:
     name: Terraform fmt / validate / lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: hashicorp/setup-terraform@v3
         with:
@@ -45,7 +45,7 @@ jobs:
     name: Lambda unit tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
@@ -58,7 +58,7 @@ jobs:
     name: IaC security scan (Trivy)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Trivy config scan
         uses: aquasecurity/trivy-action@v0.36.0
         with:
@@ -73,7 +73,7 @@ jobs:
     name: Lambda dependency & secret scan (Trivy)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Trivy filesystem scan
         uses: aquasecurity/trivy-action@v0.36.0
         with:
